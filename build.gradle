@@ -26,9 +26,9 @@ group = 'com.gft.inditex'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+    sourceCompatibility = JavaVersion.VERSION_20
+    targetCompatibility = JavaVersion.VERSION_20
 }
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -83,9 +83,9 @@ tasks.withType(JacocoReport).configureEach {
 }
 
 cucumberReports {
-    outputDir = file('build/reports/cucumber/report')
+    outputDir = file('reports/cucumber/report')
     buildId = '0'
-    reports = files('build/reports/cucumber/cucumber.json')
+    reports = files('reports/cucumber/cucumber.json')
 }
 
 task runCucumber() {
