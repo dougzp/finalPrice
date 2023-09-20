@@ -7,8 +7,6 @@ buildscript {
 }
 
 plugins {
-
-
     id 'java'
     id 'org.springframework.boot' version '3.1.3'
     id 'io.spring.dependency-management' version '1.1.3'
@@ -56,7 +54,6 @@ dependencies {
     implementation 'io.cucumber:cucumber-java:7.14.0'
     testImplementation 'io.cucumber:cucumber-junit:7.13.0'
     implementation 'io.cucumber:cucumber-spring:7.13.0'
-    testImplementation("com.vimalselvam:cucumber-extentsreport:3.1.1")
 
 }
 
@@ -79,16 +76,11 @@ tasks.withType(JacocoReport).configureEach {
     executionData.setFrom(files("${buildDir}/jacoco/test.exec", subprojects.jacocoTestReport.executionData))
 }
 
-cucumberReports {
-    outputDir = file('reports/cucumber/report')
-    buildId = '0'
-    reports = files('reports/cucumber/cucumber.json', 'reports/cucumber/cucumber.html')
-}
 
 task runCucumber() {
     dependsOn assemble, compileTestJava, test
     doLast {
-
+        generateCucumberReports.enabled = true
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.test.runtimeClasspath
@@ -96,7 +88,7 @@ task runCucumber() {
             args = [
                     '--plugin', 'json:reports/cucumber/cucumber.json',
                     '--plugin', 'pretty',
-                    '--plugin','html:reports/cucumber/report.html',
+                    '--plugin','html:reports/cucumber/cucumber.html',
                     '--glue', 'com.gft.inditex.finalprice.integration.cucumber',
                     'src/test/resources/'
             ]
@@ -104,7 +96,16 @@ task runCucumber() {
     }
     outputs.upToDateWhen { false }
 }
+cucumberReports {
+    outputDir = file('reports/cucumber')
+    buildId = '0'
+    reports = files('reports/cucumber/cucumber.json')
+}
+generateCucumberReports {
+    dependsOn runCucumber
 
+    outputs.dir('reports/cucumber')
+}
 
 jacoco {
     toolVersion = "0.8.9"
