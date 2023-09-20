@@ -49,8 +49,6 @@ To execute the application tests and generate the Cucumber report:
 ```
 ./gradlew clean
 ./gradlew build
-./gradlew runCucumber
-./gradlew generateCucumberReports
 
 ```
 Upon completion, the test report can be accessed at:
