@@ -49,13 +49,15 @@ To execute the application tests and generate the Cucumber report:
 ```
 ./gradlew clean
 ./gradlew build
+./gradlew runCucumber
+./gradlew generateCucumberReports
 
 ```
 Upon completion, the test report can be accessed at:
 ```
-reports/cucumber/report/cucumber-html-reports
+reports/cucumber/report
 ```
-Open report_feature_*.html file in a browser to see detailed test outcomes.
+Open html file in a browser to see detailed test outcomes.
 
 
 ### Additional Links
