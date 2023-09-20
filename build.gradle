@@ -25,10 +25,7 @@ subprojects {
 group = 'com.gft.inditex'
 version = '0.0.1-SNAPSHOT'
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_20
-    targetCompatibility = JavaVersion.VERSION_20
-}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -89,9 +86,9 @@ cucumberReports {
 }
 
 task runCucumber() {
-    dependsOn assemble, compileTestJava
+    dependsOn assemble, compileTestJava, test
     doLast {
-        generateCucumberReports.enabled = true
+
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.test.runtimeClasspath
