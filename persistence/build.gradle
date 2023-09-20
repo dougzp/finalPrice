@@ -1,0 +1,39 @@
+
+plugins {
+    id 'java'
+}
+
+group = 'com.gft.inditex'
+version = '0.0.1-SNAPSHOT'
+
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.28'
+    implementation project(':domain')
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'io.projectreactor:reactor-core:3.4.10'
+    implementation 'io.r2dbc:r2dbc-h2' // For H2 database
+    implementation 'org.springframework.data:spring-data-commons:3.1.4'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'io.projectreactor:reactor-test:3.5.10'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+test {
+    useJUnitPlatform()
+
+}
+
+bootJar {
+    enabled = false
+}
+
+jar.enabled = true

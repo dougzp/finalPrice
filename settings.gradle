@@ -1,0 +1,4 @@
+rootProject.name = 'FinalPrice'
+include 'domain'
+include 'persistence'
+

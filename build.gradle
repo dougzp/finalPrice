@@ -1,0 +1,114 @@
+buildscript {
+    ext {
+        javaAnotation = '1.3.2'
+
+    }
+
+}
+
+plugins {
+
+
+    id 'java'
+    id 'org.springframework.boot' version '3.1.3'
+    id 'io.spring.dependency-management' version '1.1.3'
+    id 'jacoco'
+    id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.25"
+}
+
+subprojects {
+    apply plugin: 'jacoco'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+}
+
+group = 'com.gft.inditex'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    compileOnly 'org.projectlombok:lombok'
+    implementation project(':domain')
+    implementation project(':persistence')
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'io.r2dbc:r2dbc-h2' // For H2 database
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation "javax.annotation:javax.annotation-api:${javaAnotation}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.projectlombok:lombok:1.18.28'
+    implementation 'io.cucumber:cucumber-java:7.14.0'
+    testImplementation 'io.cucumber:cucumber-junit:7.13.0'
+    implementation 'io.cucumber:cucumber-spring:7.13.0'
+    testImplementation("com.vimalselvam:cucumber-extentsreport:3.1.1")
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.withType(JacocoReport).configureEach {
+    dependsOn test // tests are required to run before generating the report
+
+    // Aggregate source directories from root and all subprojects
+    sourceDirectories.setFrom(files(sourceSets.main.allSource.srcDirs, subprojects.sourceSets.main.allSource.srcDirs))
+
+    // Aggregate class directories with exclusions from root and all subprojects
+    classDirectories.setFrom(files(sourceSets.main.output, subprojects.sourceSets.main.output).collect {
+        fileTree(dir: it, exclude: 'com/gft/inditex/finalprice/FinalPriceApplication.class')
+    })
+
+    // Aggregate execution data from root and all subprojects
+    executionData.setFrom(files("${buildDir}/jacoco/test.exec", subprojects.jacocoTestReport.executionData))
+}
+
+cucumberReports {
+    outputDir = file('build/reports/cucumber/report')
+    buildId = '0'
+    reports = files('build/reports/cucumber/cucumber.json')
+}
+
+task runCucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        generateCucumberReports.enabled = true
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.test.runtimeClasspath
+
+            args = [
+                    '--plugin', 'json:build/reports/cucumber/cucumber.json',
+                    '--plugin', 'pretty',
+                    '--plugin','html:build/reports/cucumber/report.html',
+                    '--glue', 'com.gft.inditex.finalprice.integration.cucumber',
+                    'src/test/resources/'
+            ]
+        }
+    }
+    outputs.upToDateWhen { false }
+}
+
+
+jacoco {
+    toolVersion = "0.8.9"
+}
