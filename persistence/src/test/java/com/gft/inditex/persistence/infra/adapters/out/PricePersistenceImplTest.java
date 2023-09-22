@@ -45,8 +45,7 @@ class PricePersistenceImplTest {
                 .thenReturn(Mono.just(mockEntity));
 
         // When
-        Mono<Price> resultMono = adapter.getPricesForZaraBrand(applicationDate, productId, Brands.ZARA);
-
+        Mono<Price> resultMono =Mono.fromFuture(() -> adapter.getPricesForZaraBrand(applicationDate, productId, Brands.ZARA));
         // Then
         StepVerifier.create(resultMono)
                 .assertNext(result -> {

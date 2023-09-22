@@ -58,6 +58,24 @@ reports/cucumber/report
 Open html file in a browser to see detailed test outcomes.
 
 
+### Running the Application
+To clean, build, and run the application:
+
+```
+Copy code
+./gradlew clean
+./gradlew build
+./gradlew bootRun
+```
+Your application will start and should be accessible on http://localhost:8080.
+
+Testing the Endpoint
+You can test the endpoint using curl. Here's an example:
+
+```
+curl http://localhost:8080/getPrice/2020-06-15-00.00.00/35455/ZARA
+```
+
 ### Additional Links
 
 These additional references should also help you:

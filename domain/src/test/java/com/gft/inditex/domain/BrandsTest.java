@@ -8,6 +8,11 @@ class BrandsTest {
         assertEquals(1, Brands.ZARA.getValue());
     }
 
+
+    @Test
+    void should_return_correct_enum_on_get_by_value() {
+        assertEquals(1, Brands.getByValue(1).getValue());
+    }
     @Test
     void should_throw_exception_for_invalid_value() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -15,4 +20,6 @@ class BrandsTest {
         });
         assertEquals("No enum constant for value: 999", exception.getMessage());
     }
+
+
 }
