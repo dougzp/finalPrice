@@ -1,10 +1,11 @@
 package com.gft.inditex.domain.ports.in;
 
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Mono;
+import com.gft.inditex.domain.RequestData;
+import com.gft.inditex.domain.ResponseData;
+import java.util.concurrent.CompletableFuture;
+
 
 public interface RequestPriceResource {
 
-    Mono<ServerResponse> requestPrice(ServerRequest request);
+    CompletableFuture<ResponseData> requestPrice(RequestData requestData);
 }

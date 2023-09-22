@@ -13,7 +13,7 @@ public class PriceRouter {
 
     @Bean
     RouterFunction<ServerResponse> router(PriceHandler handler){
-        return RouterFunctions.route().GET(PATH +"/{application_date}/{product_id}/{brand}", handler::requestPrice).build();
+        return RouterFunctions.route().GET(PATH +"/{application_date}/{product_id}/{brand}", handler::handleRequestPrice).build();
 
     }
 

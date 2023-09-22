@@ -54,6 +54,7 @@ dependencies {
     implementation 'io.cucumber:cucumber-java:7.14.0'
     testImplementation 'io.cucumber:cucumber-junit:7.13.0'
     implementation 'io.cucumber:cucumber-spring:7.13.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
 
 }
 

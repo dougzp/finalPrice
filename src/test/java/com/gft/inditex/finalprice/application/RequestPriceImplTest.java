@@ -1,8 +1,9 @@
-package com.gft.inditex.finalprice.service;
+package com.gft.inditex.finalprice.application;
 
 import com.gft.inditex.domain.Brands;
 import com.gft.inditex.domain.Price;
 import com.gft.inditex.domain.ports.out.RequestPrice;
+import com.gft.inditex.finalprice.FinalPriceApplication;
 import com.gft.inditex.persistence.infra.adapters.out.PriceEntity;
 import com.gft.inditex.persistence.infra.adapters.out.SpringPricesRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -12,12 +13,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.r2dbc.core.DatabaseClient;
 
 
+
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(properties = "spring.sql.init.mode=never")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = FinalPriceApplication.class,properties = {
+        "spring.datasource.url=",
+        "spring.jpa.hibernate.ddl-auto=none"
+})
 class RequestPriceImplTest {
 
 
@@ -69,7 +74,7 @@ class RequestPriceImplTest {
 
 
         //When
-        Price foundPrice = requestPrice.execute(priceEntity.getStartDate().plusMinutes(30), priceEntity.getProductId(), Brands.ZARA).block();
+        Price foundPrice = requestPrice.execute(priceEntity.getStartDate().plusMinutes(30), priceEntity.getProductId(), Brands.ZARA).join();
 
         //Then
         assertThat(foundPrice).isNotNull();
@@ -132,8 +137,7 @@ class RequestPriceImplTest {
                 .rowsUpdated().block();
 
         //When
-        Price foundPrice = requestPrice.execute(priceEntity.getStartDate().plusMinutes(30), priceEntity.getProductId(), Brands.ZARA).block();
-
+        Price foundPrice = requestPrice.execute(priceEntity.getStartDate().plusMinutes(30), priceEntity.getProductId(), Brands.ZARA).join();
         //Then
         assertThat(foundPrice).isNotNull();
         assertThat(foundPrice.getPriceValue()).isEqualTo(priceEntity.getPrice());
