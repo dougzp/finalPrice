@@ -1,8 +1,8 @@
 package com.gft.inditex.finalprice.infra.adapters.in;
 
 import com.gft.inditex.domain.Brands;
-import com.gft.inditex.finalprice.application.ports.in.RequestPriceResource;
-import com.gft.inditex.finalprice.application.ports.out.RequestPrice;
+import com.gft.inditex.domain.ports.in.RequestPriceResource;
+import com.gft.inditex.domain.ports.out.RequestPrice;
 import com.gft.inditex.finalprice.infra.adapters.in.exceptions.InvalidDateFormatException;
 import com.gft.inditex.finalprice.infra.adapters.in.exceptions.InvalidProductIdException;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.gft.inditex.finalprice.application.ports.in;
+package com.gft.inditex.domain.ports.in;
 
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;

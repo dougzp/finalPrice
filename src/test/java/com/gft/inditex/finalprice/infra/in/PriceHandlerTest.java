@@ -2,7 +2,7 @@ package com.gft.inditex.finalprice.infra.in;
 
 import com.gft.inditex.domain.Price;
 import com.gft.inditex.finalprice.FinalPriceApplication;
-import com.gft.inditex.finalprice.application.ports.out.RequestPrice;
+import com.gft.inditex.domain.ports.out.RequestPrice;
 import com.gft.inditex.finalprice.infra.adapters.in.PriceDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
-package com.gft.inditex.finalprice.service;
+package com.gft.inditex.finalprice.application;
 
 import com.gft.inditex.domain.Brands;
 import com.gft.inditex.domain.Price;
-import com.gft.inditex.finalprice.application.ports.out.RequestPrice;
-import com.gft.inditex.persistence.infra.ports.out.PricePersistence;
+import com.gft.inditex.domain.ports.out.RequestPrice;
+import com.gft.inditex.domain.ports.out.PricePersistence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

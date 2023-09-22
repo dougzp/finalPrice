@@ -1,11 +1,10 @@
-package com.gft.inditex.persistence.infra.ports.out;
+package com.gft.inditex.domain.ports.out;
 
 import com.gft.inditex.domain.Brands;
 import com.gft.inditex.domain.Price;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public interface PricePersistence {
 
