@@ -62,7 +62,6 @@ Open html file in a browser to see detailed test outcomes.
 To clean, build, and run the application:
 
 ```
-Copy code
 ./gradlew clean
 ./gradlew build
 ./gradlew bootRun
