@@ -63,7 +63,7 @@ tasks.named('test') {
 }
 
 tasks.withType(JacocoReport).configureEach {
-    dependsOn test // tests are required to run before generating the report
+    dependsOn ':domain:test', ':persistence:test' // tests are required to run before generating the report
 
     // Aggregate source directories from root and all subprojects
     sourceDirectories.setFrom(files(sourceSets.main.allSource.srcDirs, subprojects.sourceSets.main.allSource.srcDirs))
