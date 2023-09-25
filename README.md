@@ -74,6 +74,26 @@ You can test the endpoint using curl. Here's an example:
 ```
 curl http://localhost:8080/getPrice/2020-06-15-00.00.00/35455/ZARA
 ```
+### Continuous Integration
+
+On every pull request and push to the `master` branch, the pipeline:
+
+1. Sets up the necessary environment.
+2. Runs the project tests with `./gradlew test`.
+3. Generates a code coverage report with JaCoCo.
+
+### Continuous Deployment
+
+Upon merging to the `master` branch:
+
+1. The pipeline builds the project.
+2. Deploys to [specify where you deploy, e.g., a specific server, cloud provider, etc.]
+
+You can view the workflow configurations in the `.github/workflows` directory.
+
+### CI/CD Status
+
+You can check the status of the recent pipeline runs on the [GitHub Actions Dashboard](https://github.com/dougzp/finalPrice/action).
 
 ### Additional Links
 
