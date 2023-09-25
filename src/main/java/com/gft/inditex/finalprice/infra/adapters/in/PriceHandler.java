@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 @RequiredArgsConstructor
@@ -46,35 +47,27 @@ public class PriceHandler implements RequestPriceResource {
 
         return Mono.defer(() -> Mono.fromFuture(() -> requestPrice(requestData)))
                 .flatMap(ConversionHandler::toServerResponse)
-                .onErrorResume(ex -> {
-                    if (ex instanceof InvalidDateFormatException || ex instanceof InvalidProductIdException || ex instanceof InvalidBrandException) {
-                        return generateErrorResponseForDirectExceptions(ex);
-                    } else if (ex instanceof CompletionException completionException) {
-                        return generateErrorResponse(completionException);
-                    }
-                    return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body(BodyInserters.fromValue(ex.getMessage()));
-                });
+                .onErrorResume(this::generateErrorResponse);
     }
 
-    private Mono<ServerResponse> generateErrorResponseForDirectExceptions(Throwable ex) {
-        return ServerResponse.status(HttpStatus.BAD_REQUEST).body(BodyInserters.fromValue(ex.getMessage()));
-    }
+    private Mono<ServerResponse> generateErrorResponse(Throwable ex) {
+        AtomicReference<Throwable> actualExceptionRef = new AtomicReference<>(ex);
 
-    private Mono<ServerResponse> generateErrorResponse(CompletionException completionEx) {
-        Throwable cause = completionEx.getCause();
+        if (ex instanceof CompletionException) {
+            actualExceptionRef.set(ex.getCause());
+        }
 
         Map<Class<? extends Throwable>, HttpStatus> errorMapping = new HashMap<>();
-        errorMapping.put(NotFoundException.class, HttpStatus.BAD_REQUEST);
+        errorMapping.put(NotFoundException.class, HttpStatus.NOT_FOUND);
         errorMapping.put(InvalidDateFormatException.class, HttpStatus.BAD_REQUEST);
         errorMapping.put(InvalidProductIdException.class, HttpStatus.BAD_REQUEST);
+        errorMapping.put(InvalidBrandException.class, HttpStatus.BAD_REQUEST);
 
-        return Optional.ofNullable(errorMapping.get(cause.getClass()))
-                .map(status -> ServerResponse.status(status).body(BodyInserters.fromValue(cause.getMessage())))
+        return Optional.ofNullable(errorMapping.get(actualExceptionRef.get().getClass()))
+                .map(status -> ServerResponse.status(status).body(BodyInserters.fromValue(actualExceptionRef.get().getMessage())))
                 .orElseGet(() -> ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(BodyInserters.fromValue(cause.getMessage())));
+                        .body(BodyInserters.fromValue(actualExceptionRef.get().getMessage())));
     }
-
     @Override
     public CompletableFuture<ResponseData> requestPrice(RequestData requestData) {
         try {
