@@ -5,6 +5,7 @@ import com.gft.inditex.finalprice.FinalPriceApplication;
 import com.gft.inditex.domain.ports.out.RequestPrice;
 import com.gft.inditex.finalprice.config.TestConfig;
 import com.gft.inditex.finalprice.infra.adapters.in.PriceDTO;
+import com.gft.inditex.finalprice.infra.adapters.in.PriceHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.r2dbc.AutoConfigureDataR2dbc;
@@ -56,8 +57,8 @@ class PriceHandlerTest {
         webClient.get()
                 .uri("/getPrice/invalid_date/123/ZARA")
                 .exchange()
-                .expectStatus().is5xxServerError()
-                .expectBody(String.class).isEqualTo("Invalid date format. Please use 'yyyy-MM-dd-HH.mm.ss'.");
+                .expectStatus().is4xxClientError()
+                .expectBody(String.class).isEqualTo(PriceHandler.INVALID_DATE_FORMAT_MESSAGE);
     }
     @Test
     void should_return_error_for_a_invalid_productId() {
@@ -66,8 +67,20 @@ class PriceHandlerTest {
         webClient.get()
                 .uri("/getPrice/" + date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss")) + "/invalid_id/ZARA")
                 .exchange()
-                .expectStatus().is5xxServerError()
-                .expectBody(String.class).isEqualTo("Invalid product ID format. Please provide a valid number.");
+                .expectStatus().is4xxClientError()
+                .expectBody(String.class).isEqualTo(PriceHandler.INVALID_PRODUCT_ID_FORMAT_MESSAGE);
+
+    }
+
+    @Test
+    void should_return_error_for_a_invalid_brand() {
+        LocalDateTime date = LocalDateTime.now();
+
+        webClient.get()
+                .uri("/getPrice/" + date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH.mm.ss")) +  "/123/ZAARA")
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectBody(String.class).isEqualTo(PriceHandler.INVALID_BRAND_NAME_MESSAGE);
 
     }
 
