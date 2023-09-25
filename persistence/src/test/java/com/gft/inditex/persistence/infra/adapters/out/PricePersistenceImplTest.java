@@ -36,17 +36,22 @@ class PricePersistenceImplTest {
 
     @Test
     void should_call_service_method_with_correct_params() {
-        //Given
-        LocalDateTime applicationDate = LocalDateTime.now();
+        // Given
+        LocalDateTime applicationDate = LocalDateTime.of(2023, 9, 25, 10, 15); // a fixed date-time
         Integer productId = 1;
         PriceEntity mockEntity = new PriceEntity();
         mockEntity.setProductId(productId);
         mockEntity.setBrandId(1);
         mockEntity.setCurrency("EUR");
 
+        // Mocking the repository call
+        Mockito.when(repository.findByBrandIdAndApplicationDateAndProductId(
+                        Brands.ZARA.getValue(), applicationDate, productId))
+                .thenReturn(Mono.just(mockEntity));
 
         // When
-        Mono<Price> resultMono =Mono.fromFuture(() -> adapter.getPricesForZaraBrand(applicationDate, productId, Brands.ZARA));
+        Mono<Price> resultMono = Mono.fromFuture(() -> adapter.getPricesForZaraBrand(applicationDate, productId, Brands.ZARA));
+
         // Then
         StepVerifier.create(resultMono)
                 .assertNext(result -> {
@@ -56,7 +61,6 @@ class PricePersistenceImplTest {
                 .verifyComplete();
 
         Mockito.verify(repository, Mockito.times(1)).findByBrandIdAndApplicationDateAndProductId(Brands.ZARA.getValue(), applicationDate, productId);
-
     }
 
     @Test
